@@ -8,7 +8,7 @@ dotenv.config({
 
 const connection = knex(
     {
-        client: "mysql",
+        client: process.env.DBCLIENT,
         connection: {
             host: process.env.HOST,
             database: process.env.DBNAME,
