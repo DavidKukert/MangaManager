@@ -7,8 +7,11 @@ export async function up(knex: Knex) {
         table.string('serieTitleAlter');
         table.string('serieSlug').unique().notNullable();
         table.text('serieSinopse').notNullable();
-        table.string('serieThumbnail').notNullable();
         table.integer('serieRelease').notNullable();
+        table.string('serieStatus').notNullable();
+        table.string('serieType').notNullable();
+        table.string('serieFolder').notNullable();
+        table.string('serieThumbnail').notNullable();
     });
 }
 

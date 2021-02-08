@@ -1,9 +1,12 @@
 import express, { Request, Response } from "express";
+import multer from "multer";
+import { multerSerieConfig } from "./configs/multer";
 import SerieController from "./controllers/SerieController";
 import TagController from "./controllers/TagController";
 import connection from "./database/connection";
 
 const routes = express.Router();
+const multerSerie = multer(multerSerieConfig);
 
 const serieController = new SerieController();
 const tagController = new TagController();
@@ -21,8 +24,8 @@ routes.get('/', async function (req: Request, res: Response) {
 // Serie Routes
 routes.get('/series', serieController.index);
 routes.get('/serie/:serieId', serieController.show);
-routes.post('/serie/new', serieController.create);
-routes.put('/serie/:serieId', serieController.update);
+routes.post('/serie/new', multerSerie.single('serieThumbnail'), serieController.create);
+routes.put('/serie/:serieId', multerSerie.single('serieThumbnail'), serieController.update);
 routes.delete('/serie/:serieId', serieController.delete);
 
 // Tag Routes

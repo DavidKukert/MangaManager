@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import url from "url";
 import { SerieProps } from "../@types/serie";
 import connection from "../database/connection";
 
@@ -28,7 +29,13 @@ class SerieController {
     async create(req: Request, res: Response) {
         try {
             const serie: SerieProps = req.body;
-            serie.serieSlug = serie.serieTitle.normalize("NFD").replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, '').replace(/[^\w\-]+/g, '-').toLocaleLowerCase();
+
+            serie.serieThumbnail = url.format({
+                protocol: req.protocol,
+                slashes: true,
+                host: req.headers.host,
+                pathname: '/uploads/serie/' + serie.serieFolder + '/' + req.file.filename
+            });
 
             const result = await connection('series').insert(serie);
 
@@ -45,7 +52,16 @@ class SerieController {
             const params = req.params;
             const serie: SerieProps = req.body;
             serie.serieSlug = serie.serieTitle.normalize("NFD").replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, '').replace(/[^\w\-]+/g, '-').toLocaleLowerCase();
-            
+
+            if (req.file) {
+                serie.serieThumbnail = url.format({
+                    protocol: req.protocol,
+                    slashes: true,
+                    host: req.headers.host,
+                    pathname: '/uploads/serie/' + serie.serieFolder + '/' + req.file.filename
+                });
+            }
+
             await connection('series').update(serie).where(params);
 
             serie.serieId = Number(params.serieId);
@@ -59,7 +75,7 @@ class SerieController {
     async delete(req: Request, res: Response) {
         try {
             const params = req.params;
-                        
+
             await connection('series').delete().where(params);
 
             return res.json('Série Deletada com Sucesso');

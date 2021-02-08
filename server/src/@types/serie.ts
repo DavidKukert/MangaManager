@@ -6,4 +6,7 @@ export interface SerieProps {
     serieSinopse: string;
     serieThumbnail: string | File;
     serieRelease: number;
+    serieStatus: string;
+    serieType: string;
+    serieFolder: string;
 }
