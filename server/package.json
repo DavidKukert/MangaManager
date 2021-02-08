@@ -1,5 +1,5 @@
 {
-  "name": "MangaManagerServer",
+  "name": "mangamanagerserver",
   "version": "1.0.0",
   "description": "BackEnd, Api e server do MangaManager",
   "main": "src/app.js",
