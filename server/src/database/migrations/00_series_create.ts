@@ -12,6 +12,8 @@ export async function up(knex: Knex) {
         table.string('serieType').notNullable();
         table.string('serieFolder').notNullable();
         table.string('serieThumbnail').notNullable();
+        table.timestamp('serieCreatedAt').defaultTo(knex.fn.now());
+        table.timestamp('serieUpdatedAt').defaultTo(knex.raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
     });
 }
 
