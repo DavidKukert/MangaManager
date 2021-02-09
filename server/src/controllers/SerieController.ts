@@ -175,13 +175,15 @@ class SerieController {
 
             const trx = await connection.transaction();
 
+            const result0 = await trx('chapters').delete().where('chapterSerieId', '=', params.serieId);
+
             const result1 = await trx('series_rel_tags').delete().where('relSerieId', '=', params.serieId);
 
             const result2 = await trx('series').delete().where(params);
 
             await trx.commit();
 
-            if (result1 > 0 && result2 > 0 ) {
+            if ( result0 > 0 && result1 > 0 && result2 > 0 ) {
                 fs.rmdirSync(directorySerie, { recursive: true });
             }
 

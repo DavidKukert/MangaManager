@@ -2,6 +2,7 @@ import crypto from "crypto";
 import fs from "fs";
 import multer, { Options } from "multer";
 import path from "path";
+import { ChapterProps } from "../@types/chapter";
 import { SerieProps } from "../@types/serie";
 import connection from "../database/connection";
 
@@ -38,6 +39,27 @@ export const multerSerieConfig: Options = {
 
             const fileName = `${serie.serieSlug}${path.extname(file.originalname)}`;
 
+            callback(null, fileName);
+        }
+    })
+}
+
+export const multerChapterConfig: Options = {
+    storage: multer.diskStorage({
+        async destination(request, file, callback) {
+            const chapter: ChapterProps = request.body;
+            const chapterSerie: SerieProps = await connection('series').select('*').where('serieId', '=', chapter.chapterSerieId).first();
+
+            const chapterDirectory = path.resolve(__dirname, '..', '..', 'uploads', 'serie', chapterSerie.serieFolder, chapter.chapterNumber.toString().trim());
+
+            if (!fs.existsSync(chapterDirectory)) fs.mkdirSync(chapterDirectory, 0o744);
+
+            request.body.chapterSerie = chapterSerie;
+
+            callback(null, chapterDirectory);
+        },
+        filename(request, file, callback) {            
+            const fileName = file.originalname;
             callback(null, fileName);
         }
     })
