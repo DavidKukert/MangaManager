@@ -1,5 +1,7 @@
+import { TagProps } from "./tag";
+
 export interface SerieProps {
-    serieId: number;
+    serieId?: number;
     serieTitle: string;
     serieTitleAlter: string;
     serieSlug: string;
@@ -9,4 +11,8 @@ export interface SerieProps {
     serieStatus: string;
     serieType: string;
     serieFolder: string;
+    serieTags: string;
+    serieAuthors?: TagProps[];
+    serieArtists?: TagProps[];
+    serieGenres?: TagProps[];
 }
