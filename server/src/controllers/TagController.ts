@@ -59,8 +59,13 @@ class TagController {
     async delete(req: Request, res: Response) {
         try {
             const params = req.params;
-                        
-            await connection('tags').delete().where(params);
+
+            const trx = await connection.transaction();
+            
+            await trx('series_rel_tags').delete().where('relTagId', '=', params.tagId);
+            await trx('tags').delete().where(params);
+
+            await trx.commit();
 
             return res.json('Tag Deletada com Sucesso');
         } catch (error) {
