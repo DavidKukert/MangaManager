@@ -4,6 +4,7 @@ import { multerChapterConfig, multerSerieConfig } from "./configs/multer";
 import ChapterController from "./controllers/ChapterController";
 import SerieController from "./controllers/SerieController";
 import TagController from "./controllers/TagController";
+import UserController from "./controllers/UserController";
 import connection from "./database/connection";
 
 const routes = express.Router();
@@ -13,6 +14,7 @@ const multerChapter = multer(multerChapterConfig);
 const chapterController = new ChapterController();
 const serieController = new SerieController();
 const tagController = new TagController();
+const userController = new UserController();
 
 routes.get('/', async function (req: Request, res: Response) {
     try {
@@ -44,5 +46,12 @@ routes.get('/chapter/:chapterId', chapterController.show);
 routes.post('/chapter/new', multerChapter.array('chapterPages'), chapterController.create);
 routes.put('/chapter/:chapterId', multerChapter.array('chapterPages'), chapterController.update);
 routes.delete('/chapter/:chapterId', chapterController.delete);
+
+// Users Routes
+routes.get('/users', userController.index);
+routes.get('/user/:userId', userController.show);
+routes.post('/user/new', userController.create);
+routes.put('/user/:userId', userController.update);
+routes.delete('/user/:userId', userController.delete);
 
 export default routes;
