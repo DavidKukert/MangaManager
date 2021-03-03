@@ -16,7 +16,12 @@ function sha512(password: string, salt: string) {
     };
 };
 
-export default function generatePass(password: string) {
+export function generatePass(password: string) {
     const salt = generateSalt(16); // Vamos gerar o salt
     return sha512(password, salt); // Pegamos a senha e o salt
+}
+
+export function verifyPass(password: string, passwordInDb: string, saltInDb: string) {
+    const { hash, salt } = sha512(password, saltInDb)
+    return hash === passwordInDb;
 }

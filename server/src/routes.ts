@@ -3,6 +3,7 @@ import multer from "multer";
 import { multerChapterConfig, multerSerieConfig } from "./configs/multer";
 import ChapterController from "./controllers/ChapterController";
 import SerieController from "./controllers/SerieController";
+import SessionController from "./controllers/SessionController";
 import TagController from "./controllers/TagController";
 import UserController from "./controllers/UserController";
 import connection from "./database/connection";
@@ -13,6 +14,7 @@ const multerChapter = multer(multerChapterConfig);
 
 const chapterController = new ChapterController();
 const serieController = new SerieController();
+const sessionController = new SessionController();
 const tagController = new TagController();
 const userController = new UserController();
 
@@ -53,5 +55,9 @@ routes.get('/user/:userId', userController.show);
 routes.post('/user/new', userController.create);
 routes.put('/user/:userId', userController.update);
 routes.delete('/user/:userId', userController.delete);
+
+// Session Routes
+routes.get('/login', sessionController.verifyLogin, sessionController.userSession);
+routes.post('/login', sessionController.login);
 
 export default routes;

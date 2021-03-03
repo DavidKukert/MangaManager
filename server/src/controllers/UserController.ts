@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { UserProps } from "../@types/user";
 import connection from "../database/connection";
-import generatePass from "../utils/cryptoPass";
+import { generatePass } from "../utils/cryptoPass";
 
 class UserController {
 
