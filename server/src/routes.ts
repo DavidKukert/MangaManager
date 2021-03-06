@@ -31,6 +31,7 @@ routes.get('/', async function (req: Request, res: Response) {
 // Serie Routes
 routes.get('/series', serieController.index);
 routes.get('/serie/:serieId', serieController.show);
+routes.use('/serie/*', sessionController.verifyLogin);
 routes.post('/serie/new', multerSerie.single('serieThumbnail'), serieController.create);
 routes.put('/serie/:serieId', multerSerie.single('serieThumbnail'), serieController.update);
 routes.delete('/serie/:serieId', serieController.delete);
@@ -38,6 +39,7 @@ routes.delete('/serie/:serieId', serieController.delete);
 // Tag Routes
 routes.get('/tags', tagController.index);
 routes.get('/tag/:tagId', tagController.show);
+routes.use('/tag/*', sessionController.verifyLogin);
 routes.post('/tag/new', tagController.create);
 routes.put('/tag/:tagId', tagController.update);
 routes.delete('/tag/:tagId', tagController.delete);
@@ -45,6 +47,7 @@ routes.delete('/tag/:tagId', tagController.delete);
 // Chapter Routes
 routes.get('/chapters', chapterController.index);
 routes.get('/chapter/:chapterId', chapterController.show);
+routes.use('/chapter/*', sessionController.verifyLogin);
 routes.post('/chapter/new', multerChapter.array('chapterPages'), chapterController.create);
 routes.put('/chapter/:chapterId', multerChapter.array('chapterPages'), chapterController.update);
 routes.delete('/chapter/:chapterId', chapterController.delete);
@@ -53,6 +56,7 @@ routes.delete('/chapter/:chapterId', chapterController.delete);
 routes.get('/users', userController.index);
 routes.get('/user/:userId', userController.show);
 routes.post('/user/new', userController.create);
+routes.use('/user/*', sessionController.verifyLogin);
 routes.put('/user/:userId', userController.update);
 routes.delete('/user/:userId', userController.delete);
 
