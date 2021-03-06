@@ -8,6 +8,14 @@ class RoleController {
         try {
             const roles: RoleProps[] = await connection('roles').select('*');
 
+            roles.map(
+                role => {
+                    role.rolePerms = JSON.parse(role.rolePerms.toString());
+
+                    return role;
+                }
+            );
+
             return res.json(roles);
         } catch (error) {
             return res.status(500).json(error);
@@ -19,6 +27,8 @@ class RoleController {
             const roleFilter = req.params;
 
             const role: RoleProps = await connection('roles').select('*').where(roleFilter).first();
+
+            role.rolePerms = JSON.parse(role.rolePerms.toString());
             
             return res.json(role);
         } catch (error) {
@@ -30,9 +40,12 @@ class RoleController {
         try {
             const role: RoleProps = req.body;
 
+            role.rolePerms = JSON.stringify(role.rolePerms);
+
             const result = await connection('roles').insert(role);
 
             role.roleId = result[0];
+            role.rolePerms = JSON.parse(role.rolePerms.toString());
 
             return res.json(role);
         } catch (error) {
@@ -45,9 +58,12 @@ class RoleController {
             const roleFilter = req.params;
             const role: RoleProps = req.body;
 
+            role.rolePerms = JSON.stringify(role.rolePerms);
+
             await connection('roles').update(role).where(roleFilter);
 
             role.roleId = Number(roleFilter.roleId);
+            role.rolePerms = JSON.parse(role.rolePerms.toString());
 
             return res.json(role);
         } catch (error) {

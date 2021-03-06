@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import multer from "multer";
 import { multerChapterConfig, multerSerieConfig } from "./configs/multer";
 import ChapterController from "./controllers/ChapterController";
+import RoleController from "./controllers/RoleController";
 import SerieController from "./controllers/SerieController";
 import SessionController from "./controllers/SessionController";
 import TagController from "./controllers/TagController";
@@ -13,6 +14,7 @@ const multerSerie = multer(multerSerieConfig);
 const multerChapter = multer(multerChapterConfig);
 
 const chapterController = new ChapterController();
+const roleController = new RoleController();
 const serieController = new SerieController();
 const sessionController = new SessionController();
 const tagController = new TagController();
@@ -59,6 +61,15 @@ routes.post('/user/new', userController.create);
 routes.use('/user/*', sessionController.verifyLogin);
 routes.put('/user/:userId', userController.update);
 routes.delete('/user/:userId', userController.delete);
+
+// Roles Routes
+routes.use('/roles', sessionController.verifyLogin);
+routes.get('/roles', roleController.index);
+routes.use('/role/*', sessionController.verifyLogin);
+routes.get('/role/:roleId', roleController.show);
+routes.post('/role/new', roleController.create);
+routes.put('/role/:roleId', roleController.update);
+routes.delete('/role/:roleId', roleController.delete);
 
 // Session Routes
 routes.get('/login', sessionController.verifyLogin, sessionController.userSession);
