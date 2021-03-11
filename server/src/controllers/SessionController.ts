@@ -5,6 +5,7 @@ import connection from "../database/connection";
 import { verifyPass } from "../utils/cryptoPass";
 import dotenv from "dotenv-safe";
 import jwt from "jsonwebtoken";
+import { RoleProps } from "../@types/role";
 
 dotenv.config({
     allowEmptyValues: true
@@ -24,7 +25,7 @@ class SessionController {
                 userId: user.userId,
                 userNickName: user.userNickName
             }, String(process.env.JWTSECRET), {
-                expiresIn: 300
+                expiresIn: "7d"
             });
 
             return res.json({ auth: true, token: token });
@@ -61,6 +62,39 @@ class SessionController {
 
         return res.json(user);
 
+    }
+
+    async verifyAdmin(req: Request, res: Response, next: NextFunction) {
+        try {
+            const userFilter = {
+                userId: Number(req.headers["userId"]),
+                userNickName: req.headers["userNickName"]
+            };
+
+            const user: UserProps = await connection('users')
+                .select(
+                    'userId',
+                    'userNickName',
+                    'userEmail'
+                ).where(userFilter).first();
+
+            const role: RoleProps = await connection('users_rel_roles')
+                .leftJoin('roles', 'users_rel_roles.relUserId', 'roles.roleId')
+                .select('roles.*')
+                .where('relUserId', '=', user.userId).first();
+
+            role.rolePerms = JSON.parse(role.rolePerms.toString());
+
+            user.userRole = role;
+
+            if(user.userRole.roleName === 'admin') {
+                next();
+            } else {
+                throw "Usúario Não permitido!!";
+            }
+        } catch (error) {
+            return res.status(403).json(error);
+        }
     }
 
 }

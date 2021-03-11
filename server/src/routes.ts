@@ -63,9 +63,9 @@ routes.put('/user/:userId', userController.update);
 routes.delete('/user/:userId', userController.delete);
 
 // Roles Routes
-routes.use('/roles', sessionController.verifyLogin);
+routes.use('/roles', sessionController.verifyLogin, sessionController.verifyAdmin);
 routes.get('/roles', roleController.index);
-routes.use('/role/*', sessionController.verifyLogin);
+routes.use('/role/*', sessionController.verifyLogin, sessionController.verifyAdmin);
 routes.get('/role/:roleId', roleController.show);
 routes.post('/role/new', roleController.create);
 routes.put('/role/:roleId', roleController.update);

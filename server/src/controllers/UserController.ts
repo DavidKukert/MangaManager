@@ -7,7 +7,11 @@ class UserController {
 
     async index(req: Request, res: Response) {
         try {
-            const users: UserProps[] = await connection('users').select('*');
+            const users: UserProps[] = await connection('users').select(
+                'userId',
+                'userNickName',
+                'userEmail'
+            );
 
             return res.json(users);
         } catch (error) {
@@ -19,8 +23,13 @@ class UserController {
         try {
             const userFilter = req.params;
 
-            const user: UserProps = await connection('users').select('*').where(userFilter).first();
-            
+            const user: UserProps = await connection('users')
+                .select(
+                    'userId',
+                    'userNickName',
+                    'userEmail'
+                ).where(userFilter).first();
+
             return res.json(user);
         } catch (error) {
             return res.status(500).json(error);
@@ -69,7 +78,7 @@ class UserController {
             const userFilter = req.params;
 
             await connection('users').del().where(userFilter);
-            
+
             return res.json("Usuário deletado com sucesso!!");
         } catch (error) {
             return res.status(500).json(error);
